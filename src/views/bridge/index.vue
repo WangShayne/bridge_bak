@@ -48,13 +48,13 @@
 
 <script>
 // import { mapGetters } from 'vuex'
-import Message from "./components/message.vue";
-import Player from "./components/player.vue";
-import Map from "./components/map.vue";
-import { parseTime } from "@/utils/index";
+import Message from './components/message.vue'
+import Player from './components/player.vue'
+import Map from './components/map.vue'
+import { parseTime } from '@/utils/index'
 
 export default {
-  name: "Bridges",
+  name: 'Bridges',
   components: {
     Message,
     Player,
@@ -72,132 +72,132 @@ export default {
       errMessage: null,
       errList: [],
       timer1: null,
-      playType: "live", // live or record
+      playType: 'live', // live or record
       h: 0,
       componentH: 0
-    };
+    }
   },
   computed: {
     list() {
-      return this.$store.state.bridge.list;
+      return this.$store.state.bridge.list
     },
     bridge() {
-      const id = this.$route.meta.id;
-      const list = this.$store.state.bridge.list;
-      let obj = {};
-      list.forEach(item => {
+      const id = this.$route.meta.id
+      const list = this.$store.state.bridge.list
+      let obj = {}
+      list.forEach((item) => {
         if (item.id === id) {
-          obj = Object.assign(obj, item);
+          obj = Object.assign(obj, item)
         }
-      });
-      return obj;
+      })
+      return obj
     }
   },
   created() {},
   mounted() {
-    this.h = this.$getViewportSize().height - 80;
-    this.componentH = this.h / 2;
+    this.h = this.$getViewportSize().height - 80
+    this.componentH = this.h / 2
     this.$nextTick(() => {
-      this.$refs.realPlayer.realPlay();
-    });
+      this.$refs.realPlayer.realPlay()
+    })
   },
   methods: {
     test1() {
-      this.receiveWaring();
+      this.receiveWaring()
     },
     receiveWaring(id) {
-      const _t = this;
-      this.warings = true;
-      const pos = _t.errList.indexOf(id);
+      const _t = this
+      this.warings = true
+      const pos = _t.errList.indexOf(id)
       if (pos < 0) {
-        _t.errList.push(id);
-        clearTimeout(_t.timer1);
-        _t["errMsg" + id] = this.$message({
+        _t.errList.push(id)
+        clearTimeout(_t.timer1)
+        _t['errMsg' + id] = this.$message({
           showClose: true,
-          message: `警告!${_t.bridge.name}设备${id}检测到撞击!`,
-          type: "error",
+          message: `警告!设备检测到撞击!`,
+          type: 'error',
           duration: 30000,
           onClose: () => {
             // _t['errMsg' + id].close()
-            _t["errMsg" + id] = null;
-            _t.warings = false;
-            _t.errList.splice(_t.errList.indexOf(id), 1);
+            _t['errMsg' + id] = null
+            _t.warings = false
+            _t.errList.splice(_t.errList.indexOf(id), 1)
           }
-        });
-        const playerType = this.$refs.player.getPlayerType();
-        const playerState = this.$refs.player.getState();
-        if (!playerState || playerType === "live") {
+        })
+        const playerType = this.$refs.player.getPlayerType()
+        const playerState = this.$refs.player.getState()
+        if (!playerState || playerType === 'live') {
           _t.timer1 = setTimeout(() => {
-            const startTime = new Date().getTime() - 20000;
-            const endTime = new Date().getTime() + 5000;
+            const startTime = new Date().getTime() - 20000
+            const endTime = new Date().getTime() + 5000
             this.$refs.player.playerPlay(
-              parseTime(new Date(startTime), "{y}-{m}-{d} {h}:{i}:{s}"),
-              parseTime(new Date(endTime), "{y}-{m}-{d} {h}:{i}:{s}")
-            );
+              parseTime(new Date(startTime), '{y}-{m}-{d} {h}:{i}:{s}'),
+              parseTime(new Date(endTime), '{y}-{m}-{d} {h}:{i}:{s}')
+            )
             if (this.$refs.player) {
-              this.$refs.player.playerStop();
-              this.$refs.player.playerDestroy();
+              this.$refs.player.playerStop()
+              this.$refs.player.playerDestroy()
             }
-            clearTimeout(_t.timer1);
-          }, 5000);
+            clearTimeout(_t.timer1)
+          }, 5000)
         }
       }
     },
     receiveCancelWarning(id) {
-      const _t = this;
+      const _t = this
       if (this.warings) {
-        this.warings = false;
+        this.warings = false
       }
-      if (_t["errMsg" + id]) {
-        _t["errMsg" + id].close();
-        _t["errMsg" + id] = null;
-        const pos = _t.errList.indexOf(id);
+      if (_t['errMsg' + id]) {
+        _t['errMsg' + id].close()
+        _t['errMsg' + id] = null
+        const pos = _t.errList.indexOf(id)
         if (pos > 0) {
-          _t.errList.splice(pos, 1);
+          _t.errList.splice(pos, 1)
         }
       }
       if (this.$refs.player) {
-        this.$refs.player.playerStop();
-        this.$refs.player.playerDestroy();
+        this.$refs.player.playerStop()
+        this.$refs.player.playerDestroy()
       }
     },
     test2() {
-      this.$refs.player.realPlay();
-      console.log(this.$refs.player.getState());
+      this.$refs.player.realPlay()
+      console.log(this.$refs.player.getState())
     },
     test3() {
       // this.warings = false
       // this.errMessage.close()
       // this.$refs.player.playerStop()
       // this.$refs.player.playerDestroy()
-      const _t = this;
+      const _t = this
       // this.receiveCancelWarning()
-      _t.errList.map(id => {
-        _t.receiveCancelWarning(id);
-      });
+      _t.errList.map((id) => {
+        _t.receiveCancelWarning(id)
+      })
     },
     test4() {
-      console.log(this.$refs.player.getState());
+      console.log(this.$refs.player.getState())
       if (this.$refs.player) {
-        this.$refs.player.playerStop();
-        this.$refs.player.playerDestroy();
+        this.$refs.player.playerStop()
+        this.$refs.player.playerDestroy()
       }
     },
     test5() {
-      console.log(this.list);
-      console.log(this.$route.meta.gateId);
-      console.log(this.bridge);
+      console.log(this.list)
+      console.log(this.$route.meta.gateId)
+      console.log(this.bridge)
     },
     test6() {
-      const startTime = new Date().getTime() - 20000;
-      const endTime = new Date().getTime() + 5000;
+      const startTime = new Date().getTime() - 20000
+      const endTime = new Date().getTime() + 5000
       this.$refs.player.playerPlay(
-        parseTime(new Date(startTime), "{y}-{m}-{d} {h}:{i}:{s}"),
-        parseTime(new Date(endTime), "{y}-{m}-{d} {h}:{i}:{s}")
-      );
+        parseTime(new Date(startTime), '{y}-{m}-{d} {h}:{i}:{s}'),
+        parseTime(new Date(endTime), '{y}-{m}-{d} {h}:{i}:{s}')
+      )
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
